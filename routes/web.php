@@ -11,6 +11,9 @@
 |
 */
 use App\User;
+Route::get('/', function () {
+    return view('welcome');
+});
 Route::get('/language/{lang}', function ($lang) {
     // dd(auth()->user());
     // dd(User::find(1));
@@ -45,8 +48,18 @@ Route::get('/logout', function(){
 Auth::routes(['verify' => true]);
 
 Route::middleware(['verified', 'auth'])->group(function(){
-    Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('/post', 'PostController@index')
-    Route::get('/post/create', 'PostController@create');
+
+
+
+    Route::middleware(['role:admin'])->group(function(){
+        Route::get('/post', 'PostController@index');
+    });
+
+    Route::get('post/create', 'PostController@create')->middleware('active');
+
+
     Route::post('/post', 'PostController@store');
+    Route::get('post/{id}', 'PostController@show');
+
 });
+    Route::get('/home', 'HomeController@index')->name('home');

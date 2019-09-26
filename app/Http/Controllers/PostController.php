@@ -15,7 +15,7 @@ class PostController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+
     }
 
     public function index()
@@ -29,6 +29,15 @@ class PostController extends Controller
         return view('posts.index', ['posts' => $posts]);
     }
 
+    public function show($id)
+    {
+        // fetch a post from database
+        $post = Post::find($id);
+        
+        // return a view with the post
+        return view('posts.show', ['post' => $post]);
+    }
+
     public function create()
     {
         return view('posts.create');
@@ -36,8 +45,7 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
-        dump($request->input('title'));
-        dd($request->query('name'));
+
         // dd(auth()->user()->phone);
         //
         // auth()->user()
@@ -48,15 +56,14 @@ class PostController extends Controller
         //         ]);
         $request->validate([
             'title' => 'required|min:5',
-            'body'  => 'required',
+            'body'  => 'required|min:20',
         ]);
-
         Post::create([
             'user_id' => auth()->user()->id,
             'title' => $request->title,
             'body' => $request->body,
         ]);
 
-        return redirect('/post');
+        return redirect('/post')->with('success', 'Successful add new post');
     }
 }

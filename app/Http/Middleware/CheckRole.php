@@ -15,10 +15,12 @@ class CheckRole
      */
     public function handle($request, Closure $next, $role)
     {
-        if (! $request->user()->hasRole($role)) {
-            dd("you are not permitted to enter here");
+        // if this user does not have a role,
+        if(!auth()->user()->hasRole($role)){
+            return redirect("home")->with('role_check', 'You are not permitted because you are not admin');
+            // dd("you are not permitted to do this");
         }
-
+        // if yes, go to next request
         return $next($request);
     }
 }

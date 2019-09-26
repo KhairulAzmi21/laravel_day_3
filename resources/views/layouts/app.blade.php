@@ -15,6 +15,11 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <style>
+    /* .form-control {
+        box-shadow: none!important;
+    } */
+    </style>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -33,7 +38,21 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            {{-- if the request is home , add active , if no do nothing --}}
+                            <a class="nav-link {{ request()->is("home") ? "active" : "" }}" href="/home">Home</a>
+                        </li>
 
+                        @auth
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->is("post") ? "active" : "" }}" href="/post">Post</a>
+                        </li>
+                        @endauth
+                        @guest
+                        <li class="nav-item">
+                            <a class="nav-link" href="/guest">Guest</a>
+                        </li>
+                        @endguest
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -73,6 +92,16 @@
         </nav>
 
         <main class="py-4">
+            @if (session('role_check'))
+                <div class="alert alert-danger">
+                    {{ session('role_check') }}
+                </div>
+            @endif
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             @yield('content')
         </main>
     </div>

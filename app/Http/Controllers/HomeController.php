@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Post;
+use App\User;
 
 class HomeController extends Controller
 {
@@ -13,13 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(function($request, $next){
-            if (request()->cookie('applocale')) {
-                $value = request()->cookie('applocale');
-                app()->setLocale($value);
-            }
-        return $next($request);
-        });
+        // $this->middleware('auth');
     }
 
     /**
@@ -29,6 +25,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        // $name = $request->name;
+
+        // $user = User::where('name', $name)->first();
+        // fetch all posts ;
+        $posts = Post::paginate(4);
+
+        // return a view to home.blade.php with data $posts
+        return view('home', ['posts' => $posts]);
     }
 }
