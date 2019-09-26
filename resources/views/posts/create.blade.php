@@ -16,6 +16,7 @@
                                 @endforeach
                             </ul>
                         </div>
+                        
                     @endif
                     <form action="/post" method="post">
                         <label for="">Title</label>
