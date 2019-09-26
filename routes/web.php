@@ -11,11 +11,22 @@
 |
 */
 use App\User;
-Route::get('/', function () {
+Route::get('/language/{lang}', function ($lang) {
     // dd(auth()->user());
     // dd(User::find(1));
+    //
+    $cookie = cookie('applocale', $lang, 2628000);
+    return redirect()->back()->cookie($cookie);
 
-    return view('welcome');
+    // return view('welcome');
+});
+
+Route::get('welcome/{locale}', function ($locale) {
+
+    App::setLocale($locale);
+    return $locale = App::getLocale();
+
+    //
 });
 
 Route::get('/login/{id}', function($id){
@@ -33,3 +44,7 @@ Route::get('/post', 'PostController@index');
 
 Route::get('/post/create', 'PostController@create');
 Route::post('/post', 'PostController@store');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

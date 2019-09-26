@@ -8,6 +8,16 @@ use App\Post;
 
 class PostController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         //fetch all the post belongs to authenticate user
@@ -26,6 +36,8 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
+        dump($request->input('title'));
+        dd($request->query('name'));
         // dd(auth()->user()->phone);
         //
         // auth()->user()
@@ -34,6 +46,10 @@ class PostController extends Controller
         //             'title' => $request->title,
         //             'body' => $request->body,
         //         ]);
+        $request->validate([
+            'title' => 'required|min:5',
+            'body'  => 'required',
+        ]);
 
         Post::create([
             'user_id' => auth()->user()->id,
@@ -41,6 +57,6 @@ class PostController extends Controller
             'body' => $request->body,
         ]);
 
-        return "Success";
+        return redirect('/post');
     }
 }
