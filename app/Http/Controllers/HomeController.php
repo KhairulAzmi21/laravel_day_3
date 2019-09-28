@@ -29,7 +29,7 @@ class HomeController extends Controller
 
         // $user = User::where('name', $name)->first();
         // fetch all posts ;
-        $posts = Post::paginate(4);
+        $posts = Post:: paginate(4);
 
         // return a view to home.blade.php with data $posts
         return view('home', ['posts' => $posts]);

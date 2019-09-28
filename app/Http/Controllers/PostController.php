@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post;
+use App\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewPostCreated;
 // use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
@@ -33,7 +36,7 @@ class PostController extends Controller
     {
         // fetch a post from database
         $post = Post::find($id);
-        
+
         // return a view with the post
         return view('posts.show', ['post' => $post]);
     }
@@ -58,11 +61,20 @@ class PostController extends Controller
             'title' => 'required|min:5',
             'body'  => 'required|min:20',
         ]);
-        Post::create([
+
+        $post = Post::create([
             'user_id' => auth()->user()->id,
             'title' => $request->title,
             'body' => $request->body,
         ]);
+
+        // assume last 10 user that we created subscribe to this author
+        $users = User::orderBy('id', 'desc')->take(10)->get();
+
+        foreach($users as $user){
+            Mail::to($user->email)->send(new NewPostCreated($post));
+        }
+
 
         return redirect('/post')->with('success', 'Successful add new post');
     }
